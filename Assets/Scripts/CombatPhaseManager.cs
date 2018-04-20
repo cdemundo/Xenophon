@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CombatPhaseManager : MonoBehaviour {
 
-    public static CombatPhaseManager CurrentCombatPhaseManager; 
+    public static CombatPhaseManager Current; 
 
     //need all of the different Phase classes
     private BattlefieldSetupPhase _battlefieldSetupPhase;
@@ -100,7 +100,7 @@ public class CombatPhaseManager : MonoBehaviour {
                 }
 
                 //remove the attack script since the currently selected unit is done for this round
-                Destroy(currentUnitSelected.GetComponent<AttackInRange>());
+                Destroy(currentUnitSelected.GetComponent<UnitAttack>());
                 
                 currentUnitSelected = null;
 
@@ -132,13 +132,46 @@ public class CombatPhaseManager : MonoBehaviour {
         }      
     }
 
+    /*
+     *When a unit is destroyed on the battlefield during combat, remove all references to it
+     *If it was the last enemy unit destroyed, handle the end of the round
+     */
+    public void CleanUpDestroyedUnit(string unitID)
+    {
+        //remove from the library of existing units on the battlefield
+        _attackPhase.RemoveUnitAfterDestroy(unitID);
+
+        currentTarget = null;
+
+        var aiUnitsLeft = GameObject.FindGameObjectsWithTag("AIUnit");
+
+        if (aiUnitsLeft.Length <= 1) // this was the last unit to be destroyed!
+            EndCombat();
+        else
+            foreach(var ai in aiUnitsLeft)
+            {
+                Debug.Log(ai.name);
+            }
+    }
+
+    /*
+     *When all AI units have been destroyed, AttackPhase will call this function
+     *At some point, probably do things like calculate experience and any lasting effects - right now, just win!
+     */
+    public void EndCombat()
+    {
+        _changeCombatPhaseButton.interactable = false;
+
+        var gameOverTextBox = GameObject.Find("GameOver");
+        gameOverTextBox.GetComponent<Text>().text = "YOU WIN!!!!";
+    }
+
     private void SetButtonText(string buttonText)
     {
         if (buttonText != null)
         {
             _changeCombatPhaseButton.GetComponentInChildren<Text>().text = buttonText;
         }
-
     }
 
     private void ClickCombatPhaseChangeButton()
@@ -152,17 +185,12 @@ public class CombatPhaseManager : MonoBehaviour {
         _attackPhase = new AttackPhase();
         currentUnitSelected = null;
 
-        CurrentCombatPhaseManager = this;
+        Current = this;
     }
 	
 	// Update is called once per frame
 	void Update () {
 		
-        //if player attack phase and right click on enemy occurs
-        if(currentPhase == CurrentPhase.Attack)
-        {
-            //check if user is mousing over a unit
-
-        }
+        
 	}
 }

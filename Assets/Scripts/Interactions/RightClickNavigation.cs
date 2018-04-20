@@ -59,8 +59,7 @@ public class RightClickNavigation : Interaction {
         //then move the unit
         if (selected && Input.GetMouseButtonDown(1))
         {
-            Debug.Log("registered click!");
-            //if user right clicked a unit, return
+            //if user right clicked a unit, return, don't move them
             if (Manager.Current.ScreenPointToUnit(Input.mousePosition))
                 return;
 
@@ -103,11 +102,7 @@ public class RightClickNavigation : Interaction {
                     agent.isStopped = true;
                     isActive = false;
                 }
-            }
-
-            
-
-
+            }      
             //movementLeft = MaxDistance - distance traveled from original position
             unitScript.MovementLeft = unitScript.MaxDistance-distanceTraveledInRound;
         }

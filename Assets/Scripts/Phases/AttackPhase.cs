@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class AttackPhase {
 
-    private Dictionary<float, GameObject> unitsOnField;
+    private Dictionary<string, float> unitsOnField;
 
     //!!!!!!!!!!! Should this be public?? accessed from CombatPhaseManager
     public bool unitTurnsRemaining = true;
@@ -21,23 +21,23 @@ public class AttackPhase {
     {
         if (!roundStarted)
         {
-            unitsOnField = new Dictionary<float, GameObject>();
+            unitsOnField = new Dictionary<string, float>();
 
             //find all units on the battlefield
             List<GameObject> units = new List<GameObject>(GameObject.FindGameObjectsWithTag("Unit")); //player units
             var aiUnits = GameObject.FindGameObjectsWithTag("AIUnit");
 
-            foreach(var aiUnit in aiUnits)
+            foreach (var aiUnit in aiUnits)
             {
                 units.Add(aiUnit);
-            }            
+            }                   
 
             if (units != null)
             {
                 foreach (var unit in units)
                 {
                     Unit unitScript = unit.GetComponent<Unit>();
-                    unitsOnField.Add(unitScript.Initiative, unit);                    
+                    unitsOnField.Add(unitScript.ID, unit.GetComponent<Unit>().Initiative);                    
 
                     RightClickNavigation navScript = unit.GetComponent<RightClickNavigation>();
                     if (navScript != null)
@@ -66,10 +66,11 @@ public class AttackPhase {
         {
             Debug.Log(unitsOnField.Count);
             //find unit with highest initiative from those on the field
-            CombatPhaseManager.CurrentCombatPhaseManager.currentUnitSelected = unitsOnField[unitsOnField.Max(x => x.Key)];
+            string idOfMaxInitUnit = unitsOnField.FirstOrDefault(x => x.Value == unitsOnField.Values.Max()).Key;
+            CombatPhaseManager.Current.currentUnitSelected = GameObject.Find(idOfMaxInitUnit);     
 
             //remove that unit from the dictionary so we don't find it the next time around
-            unitsOnField.Remove(unitsOnField.Max(x => x.Key));
+            unitsOnField.Remove(idOfMaxInitUnit);
 
             if(unitsOnField.Count == 0)
             {
@@ -81,7 +82,7 @@ public class AttackPhase {
         }
         else
         {
-            Debug.Log("Trying to find highest initiative unit, but all units have been removed from unitsOnField dictionary!");
+            Debug.Log("No enemy units were left on field!");
         }        
     }
 
@@ -91,7 +92,7 @@ public class AttackPhase {
     public void StartAttack()
     {
         //if the highest initiative is an AI unit - need to do AI things
-        if (CombatPhaseManager.CurrentCombatPhaseManager.currentUnitSelected.GetComponent<Unit>().AIControlled)
+        if (CombatPhaseManager.Current.currentUnitSelected.GetComponent<Unit>().AIControlled)
         {
             //run AI function to let AI have it's turn
         }
@@ -105,12 +106,22 @@ public class AttackPhase {
     public void SelectUnit()
     {
         //actually select the starting unit for the player
-        CombatPhaseManager.CurrentCombatPhaseManager.currentUnitSelected.GetComponent<Interactive>().Select();
+        CombatPhaseManager.Current.currentUnitSelected.GetComponent<Interactive>().Select();
 
-        //add AttackScript so the unit can attack
-        AttackInRange attackScript = CombatPhaseManager.CurrentCombatPhaseManager.currentUnitSelected.AddComponent<AttackInRange>();
+        //enable the attackscript
+        UnitAttack attackScript = CombatPhaseManager.Current.currentUnitSelected.AddComponent<UnitAttack>();
         //pass off to AttackInRange to wait and listen for an attack
         attackScript.FindTarget();
+    }
+
+    public void RemoveUnitAfterDestroy(string unitID)
+    {
+        unitsOnField.Remove(unitID);
+    }
+
+    public void EndCombat()
+    {
+        CombatPhaseManager.Current.EndCombat();
     }
 
     private void Update()

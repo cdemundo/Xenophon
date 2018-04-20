@@ -33,18 +33,27 @@ public class BattlefieldSetupPhase {
                 Unit unitScript = unitToSpawn.GetComponent<Unit>(); //be able to reference and set information about the unit
                 player.Info = p; //set to current PlayerSetupDefinition class
 
+                unitScript.ID = unitToSpawn.name + Random.Range(0, 100000).ToString();
+                unitToSpawn.name = unitScript.ID; //so we can refer to it with GameObject.Find()
+
                 if (!p.IsAI)
                 {
                     if (Player.Default == null)
                     {
                         Player.Default = p;
                     }
-                    unitToSpawn.AddComponent<RightClickNavigation>(); //user needs to be able to move the unit!                   
+                    unitToSpawn.AddComponent<RightClickNavigation>(); //user needs to be able to move the unit!
+
+                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                    //find a better way to do this, but if not AI, disable the target icon
+                    unitToSpawn.transform.Find("Targeted_Quad").gameObject.SetActive(false);
+
                 }
                 else //if it is AI
                 {
                     unitScript.AIControlled = true;
                     unitToSpawn.tag = "AIUnit";
+                    unitToSpawn.AddComponent<EnemyHighlight>();
                 }
 
                 //set the player name for the unit so we know who owns it

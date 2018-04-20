@@ -4,14 +4,11 @@ using UnityEngine;
 
 public abstract class Unit : MonoBehaviour {
 
-    protected float hitpoints;
-    protected float initiative;
     protected string player; //what player controls this unit
     protected bool aicontrolled;
     protected float maxDistance; //how far can the unit travel in one turn
     protected float movementLeft; //how many movement points are left for this turn
     protected float movementSpeed; //how fast does the unit move
-    
 
     public float Hitpoints { get; set; }
     public float Initiative { get; set; }
@@ -25,6 +22,9 @@ public abstract class Unit : MonoBehaviour {
     public float AttackDamage { get; set; }
     public float AttackPoints { get; set; } //how many attacks a turn can this unit do
 
+    public float MaxHitpoints;
+    public string ID;
+
     // Use this for initialization
     void Start () {
 		
@@ -32,10 +32,6 @@ public abstract class Unit : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-        if(hitpoints <= 0)
-        {
-            Destroy(gameObject, .5f);
-        }
+    
 	}
 }
