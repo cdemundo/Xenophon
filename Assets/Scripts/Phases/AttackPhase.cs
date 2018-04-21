@@ -110,7 +110,7 @@ public class AttackPhase {
 
         //enable the attackscript
         UnitAttack attackScript = CombatPhaseManager.Current.currentUnitSelected.AddComponent<UnitAttack>();
-        //pass off to AttackInRange to wait and listen for an attack
+        //pass off to UnitAttack to wait and listen for an attack
         attackScript.FindTarget();
     }
 

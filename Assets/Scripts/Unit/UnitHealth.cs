@@ -20,6 +20,7 @@ public class UnitHealth : MonoBehaviour {
     {
         if (CurrentHitpoints - amountToDecrease > 0)
         {
+            Debug.Log("Lowering hitpoints!");
             CurrentHitpoints = CurrentHitpoints - amountToDecrease;
             animator.SetTrigger("damage");
         }

@@ -75,10 +75,7 @@ public class UnitAttack : MonoBehaviour {
         if (_inRange)
         {
             animator.SetTrigger("attack");
-
-            Debug.Log(unitHealthScript.CurrentHitpoints + " hitpoints before attack!");
-            unitHealthScript.DecreaseHitpoints(attackingUnitScript.AttackDamage);
-            Debug.Log(unitHealthScript.CurrentHitpoints + " hitpoints after attack!");
+            StartCoroutine(WaitForAttackAnimation("attack"));            
 
             _numberOfAttacks = _numberOfAttacks + 1;
 
@@ -87,6 +84,26 @@ public class UnitAttack : MonoBehaviour {
                 OutOfAttacks = true;
             }
         }
+    }
+
+    IEnumerator WaitForAttackAnimation(string stateName)
+    {
+        int animLayer = 0;
+
+        Animator anim = target.GetComponent<Animator>();
+
+        //Wait until Animator is done playing
+        while (anim.GetCurrentAnimatorStateInfo(animLayer).IsName(stateName) &&
+            anim.GetCurrentAnimatorStateInfo(animLayer).normalizedTime < 1.0f)
+        {
+            //Wait every frame until animation has finished
+            yield return null;
+        }
+
+        //reduce health of the unit we are attacking (which triggers damage animation)
+        Debug.Log(unitHealthScript.CurrentHitpoints + " hitpoints before attack!");
+        unitHealthScript.DecreaseHitpoints(attackingUnitScript.AttackDamage);
+        Debug.Log(unitHealthScript.CurrentHitpoints + " hitpoints after attack!");
     }
 
 
