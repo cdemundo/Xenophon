@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Unit : MonoBehaviour {
 
@@ -24,6 +25,7 @@ public abstract class Unit : MonoBehaviour {
 
     public float MaxHitpoints;
     public string ID;
+    public Sprite UnitPortrait;
 
     // Use this for initialization
     void Start () {

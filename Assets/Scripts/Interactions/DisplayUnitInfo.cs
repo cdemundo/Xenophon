@@ -9,17 +9,14 @@ public class DisplayUnitInfo : Interaction {
     private Unit unitScript;
     private RightClickNavigation navScript;
 
-    [SerializeField] private Text unitNameTextBox;
-    [SerializeField] private Text hitpointsTextBox;
-    [SerializeField] private Text movementPointsTextBox;
-
     public override void Select()
     {
         _selected = true;
 
-        unitNameTextBox.text = unitScript.Player + "-" + unitScript.name;
-        hitpointsTextBox.text = unitScript.Hitpoints.ToString();
-        movementPointsTextBox.text = "Movement Left: " + Mathf.Round(unitScript.MovementLeft).ToString();
+        InfoManager.Current.SelectedUnitName.text = unitScript.name;
+        InfoManager.Current.SelectedUnitHP.text = "HP: " + unitScript.Hitpoints.ToString();
+        InfoManager.Current.SelectedUnitMP.text = "Movement Left: " + Mathf.Round(unitScript.MovementLeft).ToString();
+        InfoManager.Current.SelectedUnitPortrait.sprite = unitScript.UnitPortrait;
     }
 
     public override void Deselect()
@@ -32,11 +29,6 @@ public class DisplayUnitInfo : Interaction {
         //get info about the unit i'm attached to
         unitScript = GetComponentInParent<Unit>();
         navScript = GetComponentInParent<RightClickNavigation>();
-
-        //find the textboxes that need to be updated
-        unitNameTextBox = GameObject.Find("UnitName").GetComponent<Text>();
-        hitpointsTextBox = GameObject.Find("Hitpoints").GetComponent<Text>();
-        movementPointsTextBox = GameObject.Find("MovementPoints").GetComponent<Text>();
     }
 	
 	// Update is called once per frame
@@ -45,9 +37,9 @@ public class DisplayUnitInfo : Interaction {
         if (!_selected)
             return;
 
-        movementPointsTextBox.text = "Movement Left: " + Mathf.Round(unitScript.MovementLeft).ToString();
-
-        
+        //if the unit can move still, update the movement points left
+        if(unitScript.MovementLeft > 0)
+            InfoManager.Current.SelectedUnitMP.text = "Movement Left: " + Mathf.Round(unitScript.MovementLeft).ToString();       
 
 	}
 }

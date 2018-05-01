@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 114296898462901098}
   - component: {fileID: 114262068376847374}
   m_Layer: 0
-  m_Name: wizard_weapon_macanim DEMO
+  m_Name: Skeleton Wizard
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2610,6 +2610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef43ae280350fb48aa4a2617dd12fd3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 0}
 --- !u!114 &114343344500358780
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2635,6 +2636,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHitpoints: 30
   ID: 
+  UnitPortrait: {fileID: 21300000, guid: ca243075ff2c1d04397dd71e1413219b, type: 3}
 --- !u!114 &114601910443580322
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2669,9 +2671,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95dc5bc536474534480f5a69098c1d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitNameTextBox: {fileID: 0}
-  hitpointsTextBox: {fileID: 0}
-  movementPointsTextBox: {fileID: 0}
 --- !u!137 &137076164570399380
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 1

@@ -108,7 +108,11 @@ public class AttackPhase {
         //actually select the starting unit for the player
         CombatPhaseManager.Current.currentUnitSelected.GetComponent<Interactive>().Select();
 
-        //enable the attackscript
+        //turn on the unit portrait if it is not enabled already
+        if(InfoManager.Current.SelectedUnitPortrait.enabled == false)
+            InfoManager.Current.SelectedUnitPortrait.enabled = true;
+
+        //enable the attack script
         UnitAttack attackScript = CombatPhaseManager.Current.currentUnitSelected.AddComponent<UnitAttack>();
         //pass off to UnitAttack to wait and listen for an attack
         attackScript.FindTarget();
@@ -122,16 +126,6 @@ public class AttackPhase {
     public void EndCombat()
     {
         CombatPhaseManager.Current.EndCombat();
-    }
-
-    private void Update()
-    {
-
-    }
-
-    private void Start()
-    {
-
     }
 
     /*

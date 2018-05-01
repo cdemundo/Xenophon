@@ -35,7 +35,6 @@ public class CombatPhaseManager : MonoBehaviour {
     public GameObject currentUnitSelected; //master reference to the currently selected unit (the one that is attacking)
 
     public Button _changeCombatPhaseButton;
-    public Text roundCounter;
 
     private enum CurrentPhase { None, BattlefieldSetup, PlayerSetup, AISetup, Attack };
     private CurrentPhase currentPhase;
@@ -84,7 +83,7 @@ public class CombatPhaseManager : MonoBehaviour {
                 {
                     //reset all units initiative and move speed
                     _attackPhase.ResetRound();
-                    roundCounter.text = _attackPhase.roundCount.ToString();
+                    InfoManager.Current.RoundCount.text = _attackPhase.roundCount.ToString();
                     _attackPhase.StartRound();
                 }                
                 break;
@@ -104,6 +103,11 @@ public class CombatPhaseManager : MonoBehaviour {
                 
                 currentUnitSelected = null;
 
+                InfoManager.Current.SelectedUnitName.text = null;
+                InfoManager.Current.SelectedUnitHP.text = null;
+                InfoManager.Current.SelectedUnitMP.text = null;
+                InfoManager.Current.SelectedUnitPortrait.enabled = false;
+
                 //********************************************************************
 
                 //Reset everything for the current target
@@ -114,6 +118,9 @@ public class CombatPhaseManager : MonoBehaviour {
                         interaction.Deselect();
                     }
                     CurrentTarget = null;
+                    InfoManager.Current.TargetUnitName.text = null;
+                    InfoManager.Current.TargetUnitHP.text = null;
+                    InfoManager.Current.TargetUnitPortrait.enabled = false;
                 }
                 //*********************************************************************
 
@@ -161,9 +168,7 @@ public class CombatPhaseManager : MonoBehaviour {
     public void EndCombat()
     {
         _changeCombatPhaseButton.interactable = false;
-
-        var gameOverTextBox = GameObject.Find("GameOver");
-        gameOverTextBox.GetComponent<Text>().text = "YOU WIN!!!!";
+        InfoManager.Current.GameOver.text = "YOU WIN!!!!";
     }
 
     private void SetButtonText(string buttonText)

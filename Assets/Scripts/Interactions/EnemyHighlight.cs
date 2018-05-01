@@ -30,6 +30,12 @@ public class EnemyHighlight : MonoBehaviour {
                     CombatPhaseManager.Current.CurrentTarget.GetComponent<EnemyHighlight>().DisplayTarget.SetActive(false);
                 //set this unit as the new target
                 CombatPhaseManager.Current.CurrentTarget = transform.gameObject;
+
+                //display information about the target
+                InfoManager.Current.TargetUnitName.text = transform.gameObject.name;
+                InfoManager.Current.TargetUnitHP.text = transform.gameObject.GetComponent<Unit>().Hitpoints.ToString();
+                InfoManager.Current.TargetUnitPortrait.sprite = transform.gameObject.GetComponent<Unit>().UnitPortrait;
+                InfoManager.Current.TargetUnitPortrait.enabled = true;
             }
         }
     }
